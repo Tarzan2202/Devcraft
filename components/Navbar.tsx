@@ -14,12 +14,12 @@ const Navbar = () => {
   return (
     <>
       <nav className="fixed top-0 w-full z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+               <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center group-hover:rotate-6 transition-transform">
               <Code2 className="text-white" size={20} />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-indigo-400">CODECRAFT<span className="text-white">.TH</span></h1>
+            <h1 className="text-xl font-bold tracking-tight text-indigo-400">MY<span className="text-white">PORTFOLIO</span></h1>
           </Link>
           
           <div className="hidden md:flex items-center gap-8 text-sm font-medium">
