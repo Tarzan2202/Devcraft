@@ -49,16 +49,14 @@ export default function HomePage() {
               </div>
               <div className="relative z-10 p-2 md:p-8">
                 <span className="text-indigo-500 font-bold text-xs mb-4 uppercase tracking-[0.3em] flex items-center gap-2">
-                  <Star size={14} className="fill-indigo-500" /> บริการรับทำเว็บไซต์โดยมืออาชีพ
+                  <Star size={14} className="fill-indigo-500" /> MY CREATIVE PORTFOLIO
                 </span>
                 <h2 className="text-4xl md:text-6xl font-black mb-6 leading-[0.9] tracking-tighter">
-                  ให้ธุรกิจของคุณ<br/>
-                  <span className="text-zinc-500 text-3xl font-medium tracking-tight">เติบโตบนโลกออนไลน์</span>
                 </h2>
                 <p className="text-zinc-400 max-w-xl text-sm md:text-lg leading-relaxed mb-4">
-                  เราช่วยสร้างเว็บไซต์ที่ตอบโจทย์ความต้องการของคุณ ไม่ว่าคุณจะทำร้านค้าออนไลน์ 
-                  หรือเว็บไซต์แนะนำบริษัท เราออกแบบให้สวยงาม ใช้งานง่าย 
-                  และที่สำคัญคือคุณไม่ต้องปวดหัวกับเรื่องเทคนิคที่เราดูแลให้ครบวงจร
+                  ยินดีต้อนรับสู่พื้นที่รวบรวมผลงานและโปรเจกต์ต่างๆ ที่ผมได้พัฒนาขึ้นมา 
+                  โดยเน้นการสร้างประสบการณ์ผู้ใช้งานที่ดี การออกแบบที่สวยงาม 
+                  และเลือกใช้เทคโนโลยีที่ทันสมัยเพื่อตอบโจทย์การใช้งานที่มีประสิทธิภาพ
                 </p>
               </div>
             </div>
@@ -69,73 +67,13 @@ export default function HomePage() {
                 <div className="p-3 bg-white/20 rounded-2xl group-hover:rotate-6 transition-transform">
                   <CheckCircle2 size={24} />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">ความภูมิใจของเรา</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">EXPERIENCE</span>
               </div>
               <div>
                 <div className="text-5xl font-black mb-1">{projects.length > 0 ? projects.length : 12}+</div>
-                <div className="text-indigo-100 text-xs font-bold uppercase tracking-[0.2em]">ธุรกิจที่เราได้ร่วมงานด้วย</div>
+                <div className="text-indigo-100 text-xs font-bold uppercase tracking-[0.2em]">โปรเจกต์ที่ทำเสร็จสิ้น</div>
               </div>
             </div>
-
-            {/* Fast & Secure Tile */}
-            <div className="md:col-span-2 md:row-span-1 bento-card flex flex-col items-center justify-center text-center p-4">
-              <div className="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center text-green-500 mb-3">
-                <Zap size={20} />
-              </div>
-              <span className="text-[10px] uppercase font-black tracking-widest text-zinc-500 mb-1">ความเร็ว</span>
-              <div className="font-bold text-sm text-white">โหลดไว ทันใจ</div>
-            </div>
-            
-            <div className="md:col-span-2 md:row-span-1 bento-card flex flex-col items-center justify-center text-center p-4">
-              <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center text-indigo-500 mb-3">
-                <Shield size={20} />
-              </div>
-              <span className="text-[10px] uppercase font-black tracking-widest text-zinc-500 mb-1">ความปลอดภัย</span>
-              <div className="font-bold text-sm text-white">ปลอดภัย ได้มาตรฐาน</div>
-            </div>
-
-            {/* Contact CTA */}
-            <div id="contact" className="md:col-span-4 md:row-span-2 bento-card bg-zinc-950 flex flex-col justify-between border-dashed border-2 border-zinc-800 p-8">
-               <div className="flex items-center gap-2 mb-4">
-                  <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_#ef4444]"></div>
-                  <h3 className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">พร้อมดูแลคุณ</h3>
-               </div>
-               <div>
-                  <h2 className="text-2xl font-black mb-4 uppercase leading-tight">เริ่มสร้างเว็บไซต์<br/>ที่ใช่สำหรับคุณ</h2>
-                  <p className="text-zinc-500 text-sm mb-8 leading-relaxed">ปรึกษาเราได้ฟรี ไม่มีค่าใช้จ่าย 
-                  เราช่วยคุณออกแบบระบบที่ใช้งานง่ายที่สุด เพื่อผลกำไรของธุรกิจคุณ</p>
-                  <button 
-                    onClick={() => setShowQR(true)}
-                    className="w-full py-4 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-500 transition-all active:scale-95 text-xs tracking-widest uppercase flex items-center justify-center gap-2"
-                  >
-                    <MessageCircle size={16} />
-                    คุยกับเราทาง LINE
-                  </button>
-               </div>
-            </div>
-
-            {/* Services Summary */}
-            <div id="services" className="md:col-span-8 md:row-span-1 bento-card grid grid-cols-3 gap-8 items-center bg-indigo-950/10 border-indigo-900/30 p-8">
-              <div className="text-center group">
-                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-600 transition-colors">
-                  <Layout size={20} className="text-indigo-400 group-hover:text-white" />
-                </div>
-                <span className="text-[10px] font-bold text-zinc-400 block uppercase tracking-widest leading-tight">ออกแบบ<br/>เห็นแล้วจดจำ</span>
-              </div>
-              <div className="text-center group">
-                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-600 transition-colors">
-                  <Monitor size={20} className="text-indigo-400 group-hover:text-white" />
-                </div>
-                <span className="text-[10px] font-bold text-zinc-400 block uppercase tracking-widest leading-tight">ใช้ง่าย<br/>ไม่ยุ่งยาก</span>
-              </div>
-              <div className="text-center group">
-                <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:bg-indigo-600 transition-colors">
-                  <Star size={20} className="text-indigo-400 group-hover:text-white" />
-                </div>
-                <span className="text-[10px] font-bold text-zinc-400 block uppercase tracking-widest leading-tight">ดูแลดี<br/>ไม่มีทิ้งงาน</span>
-              </div>
-            </div>
-
           </div>
         </div>
       </section>
@@ -146,9 +84,9 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
             <div className="max-w-2xl">
               <span className="text-indigo-500 font-black text-[10px] uppercase font-bold tracking-[0.4em] mb-3 block">Portfolio</span>
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none">ผลงานที่เราภาคภูมิใจ</h2>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none">ผลงานที่ผมภาคภูมิใจ</h2>
               <p className="text-zinc-500 text-sm md:text-lg mt-4 max-w-lg">
-                สำรวจเว็บไซต์และระบบต่างๆ ที่เราพัฒนาขึ้นมา เพื่อตอบโจทย์ความต้องการที่หลากหลายของธุรกิจ
+                สำรวจเว็บไซต์และระบบต่างๆ ที่ผมได้พัฒนาขึ้นมา เพื่อตอบโจทย์ความท้าทายและการเรียนรู้เทคโนโลยีใหม่ๆ
               </p>
             </div>
           </div>
@@ -185,33 +123,30 @@ export default function HomePage() {
                 <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                   <Code2 className="text-white" size={16} />
                 </div>
-                <h1 className="text-lg font-bold tracking-tight text-indigo-400 uppercase">CODECRAFT<span className="text-white">.TH</span></h1>
+                <h1 className="text-lg font-bold tracking-tight text-indigo-400 uppercase">MY PORTFOLIO</h1>
               </Link>
               <p className="text-zinc-600 text-xs max-w-xs text-center md:text-left leading-relaxed">
-                สร้างสรรค์เว็บไซต์และระบบออนไลน์ที่มีคุณภาพ เพื่อการเติบโตที่ไม่สิ้นสุดของธุรกิจคุณ
+                มุ่งมั่นพัฒนาซอฟต์แวร์และเว็บไซต์ที่มีคุณภาพ เพื่อส่งมอบประสบการณ์ที่ดีที่สุดให้กับผู้ใช้งาน
               </p>
             </div>
             
             <div className="flex flex-col items-center md:items-end gap-6 text-[10px] font-bold text-zinc-600 tracking-widest uppercase">
               <div className="flex gap-8">
                 <a href="#projects" className="hover:text-white transition-colors">ผลงาน</a>
-                <a href="#services" className="hover:text-white transition-colors">บริการ</a>
+                <a href="#services" className="hover:text-white transition-colors">ทักษะ</a>
                 <button 
-                  onClick={() => {
-                    const navContactBtn = document.querySelector('button[onClick*="setShowContactPopup"]');
-                    if (navContactBtn) (navContactBtn as HTMLButtonElement).click();
-                  }}
+                  onClick={() => setShowQR(true)}
                   className="hover:text-white transition-colors"
                 >
-                  ติดต่อเรา
+                  ติดต่อผม
                 </button>
               </div>
               <div className="flex items-center gap-4">
-                <span>&copy; 2024 CODECRAFT THAILAND</span>
+                <span>&copy; 2024 MY PORTFOLIO</span>
                 <div className="h-4 w-px bg-zinc-800"></div>
                 <span className="text-green-500 flex items-center gap-2">
                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                   พร้อมรับโครงการใหม่
+                   พร้อมสำหรับโอกาสใหม่
                 </span>
               </div>
             </div>
