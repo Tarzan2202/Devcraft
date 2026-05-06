@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-indigo: #4f46e5;
+  --color-zinc-950: #09090b;
+}
+
+@layer base {
+  body {
+    @apply bg-[#0A0A0A] text-white antialiased;
+  }
+}
+
+@layer utilities {
+  .bento-card {
+    @apply bg-zinc-900/50 border border-zinc-800 rounded-3xl p-6 transition-all duration-300;
+  }
+  .bento-card:hover {
+    @apply border-indigo-500/50 bg-zinc-900/80;
+  }
+}
