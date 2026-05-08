@@ -1,10 +1,10 @@
 import type {Metadata} from 'next';
-import './globals.css'; // Global styles
+import './globals.css';
 import { AuthProvider } from '@/hooks/use-auth';
 
 export const metadata: Metadata = {
-  title: 'CodecrafTH - Full-stack Solutions',
-  description: 'Software development services and portfolio',
+  title: 'Portfolio | Full-stack Developer',
+  description: 'รวบรวมผลงานและการพัฒนาซอฟต์แวร์โดยนักพัฒนา Full-stack',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {

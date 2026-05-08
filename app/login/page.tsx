@@ -44,8 +44,11 @@ export default function LoginPage() {
           className="bg-zinc-900/50 border border-zinc-800 p-10 rounded-[2.5rem] backdrop-blur-xl shadow-2xl"
         >
           <div className="mb-10 text-center">
-            <h1 className="text-3xl font-black tracking-tight mb-2 uppercase">Welcome Back</h1>
-            <p className="text-zinc-500 text-sm">Enter your credentials to access your account.</p>
+            <h1 className="text-3xl font-black tracking-tight mb-2 uppercase">จัดการผลงาน <br/></h1>
+            <p className="text-zinc-500 text-xs mt-4 leading-relaxed">
+              ส่วนนี้สำหรับผู้ดูแลระบบเพื่อจัดการข้อมูลโปรเจกต์และเนื้อหาบนเว็บไซต์เท่านั้น <br/>
+              บุคคลทั่วไปสามารถรับชมผลงานได้ที่หน้าหลักโดยไม่ต้องเข้าสู่ระบบ
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -97,14 +100,14 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-10 text-center pt-8 border-t border-zinc-800">
+          {/* <div className="mt-10 text-center pt-8 border-t border-zinc-800">
             <p className="text-zinc-500 text-xs">
               Don&apos;t have an account?{' '}
               <Link href="/register" className="text-white font-bold hover:text-indigo-400 transition-colors">
                 Register for access
               </Link>
             </p>
-          </div>
+          </div> */}
         </motion.div>
       </div>
     </main>

@@ -117,7 +117,7 @@ const AdminDashboardClient: React.FC<AdminDashboardClientProps> = ({ initialProj
         />
       ) : activeTab === 'projects' ? (
         <>
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-zinc-900 border border-zinc-800 p-6 rounded-3xl mb-8">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-zinc-900 border border-zinc-800 p-4 md:p-6 rounded-3xl mb-8">
             <div className="relative w-full md:w-96">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600" size={18} />
               <input 
@@ -131,7 +131,7 @@ const AdminDashboardClient: React.FC<AdminDashboardClientProps> = ({ initialProj
             
             <button 
               onClick={() => setIsFormOpen(true)}
-              className="w-full md:w-auto flex items-center justify-center gap-2 px-8 py-3 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-500 transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
+              className="w-full md:w-auto flex items-center justify-center gap-2 px-8 py-4 md:py-3 bg-indigo-600 text-white font-black rounded-2xl hover:bg-indigo-500 transition-all active:scale-95 shadow-lg shadow-indigo-500/20"
             >
               <Plus size={18} /> NEW ARTIFACT
             </button>
@@ -143,19 +143,19 @@ const AdminDashboardClient: React.FC<AdminDashboardClientProps> = ({ initialProj
                 key={project._id?.toString()}
                 className="group bg-zinc-900/40 border border-zinc-800 rounded-2xl p-4 flex flex-col md:flex-row items-center gap-6 hover:bg-zinc-900 transition-all duration-300"
               >
-                <div className="w-full md:w-32 h-20 bg-zinc-950 rounded-xl overflow-hidden shrink-0 relative border border-zinc-800">
-                  <Image 
-                    src={project.imageUrl || `https://picsum.photos/seed/${project.title}/200/120`} 
+                <div className="w-full md:w-32 h-40 md:h-20 bg-zinc-950 rounded-xl overflow-hidden shrink-0 relative border border-zinc-800">
+                  <Image
+                    src={project.imageUrl || `https://picsum.photos/seed/${project.title}/200/120`}
                     alt={project.title}
                     fill
-                    unoptimized
+                    sizes="(max-width: 768px) 100vw, 128px"
                     className="object-cover opacity-60 group-hover:opacity-100 transition-opacity"
                     referrerPolicy="no-referrer"
                   />
                 </div>
                 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-3 mb-1">
+                <div className="flex-1 min-w-0 text-center md:text-left">
+                  <div className="flex items-center justify-center md:justify-start gap-3 mb-1">
                     <span className="text-[9px] font-black transform uppercase tracking-widest text-indigo-400">{project.category}</span>
                     {project.featured && (
                       <div className="flex items-center gap-1 text-[9px] font-black text-amber-500">
@@ -163,26 +163,29 @@ const AdminDashboardClient: React.FC<AdminDashboardClientProps> = ({ initialProj
                       </div>
                     )}
                   </div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-indigo-100 transition-colors">{project.title}</h3>
+                  <h3 className="text-lg font-bold text-white group-hover:text-indigo-100 transition-colors truncate">{project.title}</h3>
                 </div>
                 
-                <div className="flex items-center gap-2 shrink-0">
+                <div className="flex items-center justify-center gap-2 shrink-0 w-full md:w-auto">
                   <button 
                     onClick={() => setEditingProject(project)}
-                    className="p-3 bg-zinc-950 border border-zinc-800 hover:border-indigo-500/50 text-zinc-400 hover:text-white rounded-xl transition-all"
+                    className="flex-1 md:flex-none p-4 md:p-3 bg-zinc-950 border border-zinc-800 hover:border-indigo-500/50 text-zinc-400 hover:text-white rounded-xl transition-all flex justify-center"
+                    title="Edit"
                   >
                     <Edit2 size={16} />
                   </button>
                   <button 
                     onClick={() => handleDelete(project._id!.toString())}
-                    className="p-3 bg-zinc-950 border border-zinc-800 hover:border-red-500/50 text-zinc-600 hover:text-red-500 rounded-xl transition-all"
+                    className="flex-1 md:flex-none p-4 md:p-3 bg-zinc-950 border border-zinc-800 hover:border-red-500/50 text-zinc-600 hover:text-red-500 rounded-xl transition-all flex justify-center"
+                    title="Delete"
                   >
                     <Trash2 size={16} />
                   </button>
                   <a 
                     href={project.liveUrl || '#'} 
                     target="_blank"
-                    className="p-3 bg-zinc-950 border border-zinc-800 hover:border-indigo-500/50 text-zinc-400 hover:text-white rounded-xl transition-all"
+                    className="flex-1 md:flex-none p-4 md:p-3 bg-zinc-950 border border-zinc-800 hover:border-indigo-500/50 text-zinc-400 hover:text-white rounded-xl transition-all flex justify-center"
+                    title="View Live"
                   >
                     <ExternalLink size={16} />
                   </a>

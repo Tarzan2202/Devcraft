@@ -23,7 +23,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           src={project.imageUrl || `https://picsum.photos/seed/${project.title}/800/450`} 
           alt={project.title}
           fill
-          unoptimized
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           referrerPolicy="no-referrer"
         />

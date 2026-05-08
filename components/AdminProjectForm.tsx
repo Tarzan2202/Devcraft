@@ -68,18 +68,18 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ existingProject, on
   };
 
   return (
-    <div className="bg-zinc-900 p-8 rounded-[2rem] border border-zinc-800 max-w-3xl w-full mx-auto shadow-2xl backdrop-blur-xl">
-      <div className="flex justify-between items-center mb-10">
+    <div className="bg-zinc-900 p-6 md:p-8 rounded-[2rem] border border-zinc-800 max-w-3xl w-full mx-auto shadow-2xl backdrop-blur-xl">
+      <div className="flex justify-between items-center mb-8 md:mb-10">
         <div>
-          <h2 className="text-2xl font-black tracking-tight">{existingProject ? 'EDIT ARTIFACT' : 'REGISTER NEW ARTIFACT'}</h2>
-          <p className="text-zinc-500 text-xs mt-1">Configure project properties and deployment links.</p>
+          <h2 className="text-xl md:text-2xl font-black tracking-tight">{existingProject ? 'EDIT ARTIFACT' : 'REGISTER NEW ARTIFACT'}</h2>
+          <p className="text-zinc-500 text-[10px] md:text-xs mt-1">Configure project properties and deployment links.</p>
         </div>
-        <button onClick={onCancel} className="p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-500 hover:text-white transition-colors">
+        <button onClick={onCancel} className="p-2 md:p-3 bg-zinc-950 border border-zinc-800 rounded-xl text-zinc-500 hover:text-white transition-colors">
           <X size={20} />
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-8">
+      <form onSubmit={handleSubmit} className="space-y-6 md:space-y-8">
         <div className="grid grid-cols-1 gap-6">
           <div className="space-y-3">
             <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">System Identity (Title)</label>
@@ -87,7 +87,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ existingProject, on
               required
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-indigo-500/50 transition-all font-medium"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-indigo-500/50 transition-all font-medium text-sm md:text-base"
               placeholder="e.g. Neural Nexus Dashboard"
             />
           </div>
@@ -99,7 +99,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ existingProject, on
               rows={4}
               value={formData.description}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
-              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-indigo-500/50 transition-all resize-none"
+              className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-indigo-500/50 transition-all resize-none text-sm md:text-base"
               placeholder="Detailed overview of the artifact's purpose..."
             />
           </div>
@@ -133,7 +133,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ existingProject, on
               <input 
                 value={formData.imageUrl}
                 onChange={(e) => setFormData({...formData, imageUrl: e.target.value})}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500/50 transition-colors"
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500/50 transition-colors text-sm"
                 placeholder="https://images.unsplash.com/..."
               />
             ) : (
@@ -178,7 +178,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ existingProject, on
             <select 
               value={formData.category}
               onChange={(e) => setFormData({...formData, category: e.target.value})}
-              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500/50 transition-colors appearance-none"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-indigo-500/50 transition-colors appearance-none text-sm"
             >
               <option value="Web Application">Web Application</option>
               <option value="Mobile App">Mobile App</option>
@@ -194,7 +194,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ existingProject, on
           <div className="flex flex-wrap gap-2 min-h-[2.5rem] p-3 bg-zinc-950/50 border border-zinc-800 rounded-xl">
             {formData.techStack.length === 0 && <span className="text-zinc-700 text-xs italic">No tags added...</span>}
             {formData.techStack.map(tech => (
-              <span key={tech} className="flex items-center gap-2 pl-3 pr-2 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-lg text-xs font-bold text-indigo-400 animate-in fade-in zoom-in duration-300">
+              <span key={tech} className="flex items-center gap-2 pl-3 pr-2 py-1.5 bg-indigo-500/10 border border-indigo-500/20 rounded-lg text-[10px] md:text-xs font-bold text-indigo-400 animate-in fade-in zoom-in duration-300">
                 {tech} 
                 <button type="button" onClick={() => removeTech(tech)} className="p-0.5 hover:bg-indigo-500/20 rounded-md transition-colors">
                   <X size={12}/>
@@ -202,7 +202,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ existingProject, on
               </span>
             ))}
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-col sm:flex-row gap-3">
             <input 
               value={newTech}
               onChange={(e) => setNewTech(e.target.value)}
@@ -213,7 +213,7 @@ const AdminProjectForm: React.FC<AdminProjectFormProps> = ({ existingProject, on
             <button 
               type="button" 
               onClick={addTech}
-              className="px-6 bg-zinc-800 text-white rounded-xl hover:bg-indigo-600 transition-all font-bold text-xs flex items-center gap-2"
+              className="w-full sm:w-auto px-6 py-3 bg-zinc-800 text-white rounded-xl hover:bg-indigo-600 transition-all font-bold text-xs flex items-center justify-center gap-2"
             >
               <Plus size={16} /> ADD
             </button>

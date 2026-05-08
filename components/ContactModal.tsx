@@ -40,7 +40,7 @@ const ContactModal = ({ isOpen, onClose }: ContactModalProps) => {
                 <MessageCircle size={32} />
               </div>
               <h3 className="text-2xl font-black tracking-tight mb-2 uppercase text-white">แสกนเพื่อเพิ่มเพื่อน</h3>
-              <p className="text-zinc-500 text-sm">แสกนคิวอาร์โค้ดด้านล่างเพื่อปรึกษาเราได้ทันที</p>
+              <p className="text-zinc-500 text-sm">แสกนคิวอาร์โค้ดด้านล่างเพื่อปรึกษาผมได้ทันที</p>
             </div>
 
             <div className="bg-white p-4 rounded-3xl inline-block mb-6 shadow-xl">
