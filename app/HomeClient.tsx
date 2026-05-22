@@ -51,11 +51,60 @@ export default function HomeClient({ initialProjects, dbError }: HomeClientProps
                 <div className="p-3 bg-white/20 rounded-2xl group-hover:rotate-6 transition-transform">
                   <CheckCircle2 size={24} />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">EXPERIENCE</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest opacity-80"> </span>
               </div>
               <div>
-                <div className="text-5xl font-black mb-1">{initialProjects.length > 0 ? initialProjects.length : 12}+</div>
+                <div className="text-5xl font-black mb-1">{initialProjects.length > 0 ? initialProjects.length : 12}</div>
                 <div className="text-indigo-100 text-xs font-bold uppercase tracking-[0.2em]">โปรเจกต์ที่ทำเสร็จสิ้น</div>
+              </div>
+            </div>
+            <div className="md:col-span-4 md:row-span-1 bg-indigo-600 rounded-[2.5rem] p-8 flex flex-col justify-between group shadow-2xl shadow-indigo-500/20 min-h-[200px] md:min-h-0">
+              <div className="flex justify-between items-start">
+                <div className="flex items-center gap-2 text-white font-medium">
+                  <Code2 size={24} /> 
+                  <span>ทักษะ</span>
+                </div>
+              </div>
+
+              {/* โซน Tech Stack พร้อมโลโก้ */}
+              <div className="flex flex-wrap gap-2 mt-4">
+                
+                {/* React */}
+                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" className="w-4 h-4" alt="React" />
+                  React
+                </span>
+
+                {/* Next.js */}
+                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" className="w-4 h-4 invert" alt="Next.js" />
+                  Next.js
+                </span>
+
+                {/* Tailwind CSS */}
+                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" className="w-4 h-4" alt="Tailwind" />
+                  Tailwind
+                </span>
+
+                {/* TypeScript */}
+                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" className="w-4 h-4" alt="TypeScript" />
+                  TypeScript
+                </span>
+
+                {/* Node.js */}
+                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" className="w-4 h-4" alt="Node.js" />
+                  Node.js
+                </span>
+
+                {/* mongoDB */}
+                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
+                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" className="w-4 h-4" alt="MongoDB" />
+                  MongoDB
+                </span>
+
               </div>
             </div>
           </div>
@@ -91,6 +140,8 @@ export default function HomeClient({ initialProjects, dbError }: HomeClientProps
                 </div>
             )}
           </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          </div>
         </div>
       </section>
 
@@ -113,7 +164,6 @@ export default function HomeClient({ initialProjects, dbError }: HomeClientProps
             <div className="flex flex-col items-center md:items-end gap-6 text-[10px] font-bold text-zinc-600 tracking-widest uppercase">
               <div className="flex gap-8">
                 <a href="#projects" className="hover:text-white transition-colors">ผลงาน</a>
-                <a href="#services" className="hover:text-white transition-colors">ทักษะ</a>
                 <button 
                   onClick={() => setShowQR(true)}
                   className="hover:text-white transition-colors"
