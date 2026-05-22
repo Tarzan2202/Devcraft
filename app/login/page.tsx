@@ -99,15 +99,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          {/* <div className="mt-10 text-center pt-8 border-t border-zinc-800">
-            <p className="text-zinc-500 text-xs">
-              Don&apos;t have an account?{' '}
-              <Link href="/register" className="text-white font-bold hover:text-indigo-400 transition-colors">
-                Register for access
-              </Link>
-            </p>
-          </div> */}
         </motion.div>
       </div>
     </main>

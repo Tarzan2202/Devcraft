@@ -3,26 +3,23 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { Code2, User, LogOut, Layout, X, MessageCircle, Phone, Menu } from 'lucide-react';
+import { Code2, User, LogOut, Layout, X, MessageCircle, Phone, Menu, Mail } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import ContactModal from '@/components/ContactModal';
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
   const [showQRModal, setShowQRModal] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
     <>
       <nav className="fixed top-0 w-full z-50 bg-[#0A0A0A]/80 backdrop-blur-md border-b border-zinc-800">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center group-hover:rotate-6 transition-transform">
-              <Code2 className="text-white" size={20} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 md:h-20 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 sm:gap-3 group shrink-0">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-600 rounded-lg flex items-center justify-center group-hover:rotate-6 transition-transform">
+              <Code2 className="text-white sm:w-5 sm:h-5" size={18} />
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-indigo-400">MY<span className="text-white">PORTFOLIO</span></h1>
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-indigo-400 whitespace-nowrap">MY<span className="text-white">PORTFOLIO</span></h1>
           </Link>
           
           {/* Desktop Navigation */}
@@ -59,6 +56,18 @@ const Navbar = () => {
                     <div>
                       <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">โทรเลย</div>
                       <div className="text-xs font-bold">090-402-8671</div>
+                    </div>
+                  </a>
+                  <a 
+                    href="mailto:peeravich22@gmail.com"
+                    className="w-full flex items-center gap-3 p-3 bg-zinc-950 border border-zinc-900 rounded-xl hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all text-left"
+                  >
+                    <div className="w-10 h-10 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-500">
+                      <Mail size={20} />
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">อีเมล</div>
+                      <div className="text-xs font-bold">peeravich22@gmail.com</div>
                     </div>
                   </a>
                 </div>
@@ -102,115 +111,86 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 text-zinc-400 hover:text-white transition-colors"
-            onClick={toggleMobileMenu}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+          {/* Mobile Navigation */}
+          <div className="md:hidden flex items-center gap-2">
+            {/* เปลี่ยนเป็นปุ่มกดเพื่อสั่งเปิด Modal ตัวเดียวกับ Desktop */}
+              {/* Mobile Navigation */}
+          <div className="md:hidden relative flex items-center gap-2" id="mobile-nav">
+            <Link 
+              href="/#projects" 
+              className="text-[11px] font-bold uppercase tracking-widest bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg shadow-indigo-500/20 active:scale-95 transition-all"
+            >
+              ผลงาน
+            </Link>
+            
+            {/* ปุ่มหลักสำหรับสลับเปิด/ปิด Dropdown เมนู */}
+            <button 
+              onClick={() => {
+                // ประกาศตัวแปรนี้เพิ่มด้านบนด้วย หรือถ้าขยับไปใช้ State ตัวเดิมก็สามารถสั่งผูกได้ครับ
+                // ตัวอย่างนี้สมมติให้โยงไปเปิดเมนูด้านล่าง
+                const dropdown = document.getElementById('mobile-contact-dropdown');
+                dropdown?.classList.toggle('hidden');
+              }}
+              className="text-[11px] font-bold uppercase tracking-widest bg-zinc-900 border border-zinc-800 text-white px-4 py-2 rounded-lg shadow-lg active:scale-95 transition-all flex items-center gap-1"
+            >
+              ติดต่อผม
+            </button>
 
-        {/* Mobile Navigation Drawer */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <>
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="fixed inset-0 top-20 bg-black/60 backdrop-blur-sm z-40 md:hidden"
-                onClick={toggleMobileMenu}
-              />
-              <motion.div 
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
-                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed right-0 top-20 bottom-0 w-full max-w-xs bg-zinc-900 border-l border-zinc-800 z-50 md:hidden p-6 overflow-y-auto"
-              >
-                <div className="flex flex-col gap-6">
-                  <Link 
-                    href="/#projects" 
-                    className="text-lg font-bold text-zinc-400 hover:text-white transition-colors"
-                    onClick={toggleMobileMenu}
-                  >
-                    ผลงาน
-                  </Link>
-                  
-                  <div className="space-y-4">
-                    <div className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2">ช่องทางติดต่อ</div>
-                    <button 
-                      onClick={() => {
-                        setShowQRModal(true);
-                        toggleMobileMenu();
-                      }}
-                      className="w-full flex items-center gap-4 p-4 bg-zinc-950 border border-zinc-800 rounded-2xl text-left"
-                    >
-                      <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center text-green-500">
-                        <MessageCircle size={20} />
-                      </div>
-                      <span className="text-sm font-bold">LINE ID: @0904028671</span>
-                    </button>
-                    <a 
-                      href="tel:0904028671" 
-                      className="w-full flex items-center gap-4 p-4 bg-zinc-950 border border-zinc-800 rounded-2xl text-left"
-                    >
-                      <div className="w-10 h-10 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-500">
-                        <Phone size={20} />
-                      </div>
-                      <span className="text-sm font-bold">090-402-8671</span>
-                    </a>
+            {/* กล่องรายการ Dropdown (ซ่อนอยู่ตอนแรก จะแสดงเมื่อกดปุ่มด้านบน) */}
+            <div 
+              id="mobile-contact-dropdown"
+              className="hidden absolute top-full right-0 mt-2 w-60 bg-zinc-900 border border-zinc-800 rounded-2xl p-2 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+            >
+              <div className="space-y-1">
+                {/* LINE */}
+                <a 
+                  href="https://line.me/ti/p/_d4yKzdv_U"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-2.5 bg-zinc-950 border border-zinc-900 rounded-xl hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all text-left"
+                >
+                  <div className="w-8 h-8 bg-green-500/10 rounded-lg flex items-center justify-center text-green-500 shrink-0">
+                    <MessageCircle size={16} />
                   </div>
+                  <div>
+                    <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">LINE ID</div>
+                    <div className="text-xs font-bold text-zinc-300">@0904028671</div>
+                  </div>
+                </a>
 
-                  <div className="h-px bg-zinc-800 w-full"></div>
+                {/* โทรศัพท์ */}
+                <a 
+                  href="tel:0904028671" 
+                  className="flex items-center gap-3 p-2.5 bg-zinc-950 border border-zinc-900 rounded-xl hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all text-left"
+                >
+                  <div className="w-8 h-8 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-500 shrink-0">
+                    <Phone size={16} />
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">โทรเลย</div>
+                    <div className="text-xs font-bold text-zinc-300">090-402-8671</div>
+                  </div>
+                </a>
 
-                  {user ? (
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-4 p-4 bg-indigo-600/5 border border-indigo-500/10 rounded-2xl">
-                        <div className="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-                          <User className="text-white" size={20} />
-                        </div>
-                        <div>
-                          <div className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">{user.role}</div>
-                          <div className="text-sm font-bold truncate max-w-[150px]">{user.name}</div>
-                        </div>
-                      </div>
-                      {user.role === 'admin' && (
-                        <Link 
-                          href="/admin" 
-                          className="w-full flex items-center justify-center gap-3 py-4 bg-indigo-600 text-white rounded-2xl font-bold uppercase tracking-widest text-xs"
-                          onClick={toggleMobileMenu}
-                        >
-                          <Layout size={16} /> Admin Dashboard
-                        </Link>
-                      )}
-                      <button 
-                        onClick={() => {
-                          signOut();
-                          toggleMobileMenu();
-                        }}
-                        className="w-full flex items-center justify-center gap-3 py-4 bg-red-500/10 text-red-500 border border-red-500/20 rounded-2xl font-bold uppercase tracking-widest text-xs"
-                      >
-                        <LogOut size={16} /> ออกจากระบบ
-                      </button>
-                    </div>
-                  ) : (
-                    <Link 
-                      href="/login" 
-                      className="w-full flex items-center justify-center gap-3 py-4 bg-white text-black rounded-2xl font-bold uppercase tracking-widest text-xs"
-                      onClick={toggleMobileMenu}
-                    >
-                      <User size={16} /> เข้าสู่ระบบ (สำหรับแอดมิน)
-                    </Link>
-                  )}
-                </div>
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
+                {/* อีเมล */}
+                <a 
+                  href="mailto:peeravich22@gmail.com"
+                  className="flex items-center gap-3 p-2.5 bg-zinc-950 border border-zinc-900 rounded-xl hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all text-left"
+                >
+                  <div className="w-8 h-8 bg-indigo-500/10 rounded-lg flex items-center justify-center text-indigo-500 shrink-0">
+                    <Mail size={16} />
+                  </div>
+                  <div>
+                    <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">อีเมล</div>
+                    <div className="text-xs font-bold text-zinc-300">peeravich22@gmail.com</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
       </nav>
-
       <ContactModal isOpen={showQRModal} onClose={() => setShowQRModal(false)} />
     </>
   );

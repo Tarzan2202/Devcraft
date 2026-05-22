@@ -3,6 +3,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, MessageCircle } from 'lucide-react';
+import { useState } from 'react';
 
 interface ContactModalProps {
   isOpen: boolean;

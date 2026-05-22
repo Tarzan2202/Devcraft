@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="en" suppressHydrationWarning className="scroll-smooth">
+    <html lang="en" suppressHydrationWarning className="scroll-smooth scroll-pt-16 md:scroll-pt-20">
       <body suppressHydrationWarning className="bg-[#0A0A0A] text-white">
         <AuthProvider>
           {children}
