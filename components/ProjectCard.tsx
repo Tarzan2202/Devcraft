@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { Github, Layers } from 'lucide-react';
 import { Project } from '@/lib/types';
 import Image from 'next/image';
@@ -13,16 +13,71 @@ interface ProjectCardProps {
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   const [showDetail, setShowDetail] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 20, stiffness: 100 };
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [7, -7]), springConfig);
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-7, 7]), springConfig);
+
+  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    
+    const width = rect.width;
+    const height = rect.height;
+    
+    const mouseXPos = event.clientX - rect.left;
+    const mouseYPos = event.clientY - rect.top;
+    
+    const xPct = mouseXPos / width - 0.5;
+    const yPct = mouseYPos / height - 0.5;
+    
+    x.set(xPct);
+    y.set(yPct);
+
+    mouseX.set(mouseXPos);
+    mouseY.set(mouseYPos);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
 
   return (
     <>
       <motion.div 
+        ref={cardRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: "preserve-3d",
+        }}
         initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="group bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden hover:border-indigo-500/50 transition-all duration-300 flex flex-col"
+        className="group relative bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden hover:border-indigo-500/50 transition-colors duration-500 flex flex-col"
       >
-        <div className="relative aspect-square md:aspect-video overflow-hidden">
+        {/* Spotlight Effect */}
+        <motion.div
+          className="pointer-events-none absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"
+          style={{
+            background: useTransform(
+              [mouseX, mouseY],
+              ([x, y]) => `radial-gradient(350px circle at ${x}px ${y}px, rgba(79, 70, 229, 0.15), transparent 80%)`
+            ),
+          }}
+        />
+
+        <div className="relative aspect-square md:aspect-video overflow-hidden" style={{ transform: "translateZ(20px)" }}>
           <Image 
             src={project.imageUrl || `https://picsum.photos/seed/${project.title}/800/450`} 
             alt={project.title}
@@ -40,7 +95,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           </div>
         </div>
         
-        <div className="p-6 flex-grow flex flex-col">
+        <div className="p-6 flex-grow flex flex-col" style={{ transform: "translateZ(30px)" }}>
           <h3 className="text-lg font-bold text-white mb-2 leading-tight">
             {project.title}
           </h3>
@@ -52,7 +107,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
           <div className="mt-auto flex items-center justify-between">
             <div className="flex gap-3">
                {project.githubUrl && (
-                <a href={project.githubUrl} target="_blank" className="text-zinc-600 hover:text-white transition-colors">
+                <a href={project.githubUrl} target="_blank" className="text-zinc-600 hover:text-white transition-colors relative z-20">
                   <Github size={16} />
                 </a>
                )}
@@ -60,7 +115,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             
             <button 
               onClick={() => setShowDetail(true)}
-              className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 group-hover:text-indigo-400 transition-colors"
+              className="text-[10px] font-bold uppercase tracking-widest text-zinc-600 group-hover:text-indigo-400 transition-colors relative z-20"
             >
               DETAILS →
             </button>

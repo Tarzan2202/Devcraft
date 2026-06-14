@@ -1,206 +1,31 @@
 'use server';
 
-import { Db, ObjectId } from 'mongodb';
-import { Project, User, AdminStatus } from './types';
+import { getDb } from '@/lib/mongodb';
+import { ObjectId } from 'mongodb';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { revalidatePath } from 'next/cache';
-import bcrypt from 'bcryptjs';
-import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
-import { getDb as getDbHelper } from './mongodb';
+import { SignJWT, jwtVerify } from 'jose';
+import bcrypt from 'bcryptjs';
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback_secret_keep_it_safe'
-);
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '');
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'default-secret-key-change-me');
 
-async function getDb(): Promise<Db> {
-  return getDbHelper();
-}
+// --- Helper Functions ---
 
-// --- Auth Actions ---
-
-export async function login(formData: FormData) {
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-
+async function generateVector(text: string): Promise<number[]> {
   try {
-    const db = await getDb();
-    console.log(`[Login] Attempting to find user with email: ${email}`);
-    const user = await db.collection<User>('users').findOne({ email });
-
-    if (!user || !user.password) {
-      console.log(`[Login] User not found: ${email}`);
-      return { error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' };
+    const embedModel = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
+    const result = await embedModel.embedContent(text);
+    
+    if (result.embedding?.values) {
+      return result.embedding.values;
     }
-
-    const isValid = await bcrypt.compare(password, user.password);
-    if (!isValid) {
-      console.log(`[Login] Invalid password for: ${email}`);
-      return { error: 'อีเมลหรือรหัสผ่านไม่ถูกต้อง' };
-    }
-
-    const token = await new SignJWT({ 
-      userId: user._id?.toString(),
-      role: user.role,
-      email: user.email 
-    })
-      .setProtectedHeader({ alg: 'HS256' })
-      .setIssuedAt()
-      .setExpirationTime('24h')
-      .sign(JWT_SECRET);
-
-    (await cookies()).set('session', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' && !process.env.APP_URL?.includes('localhost'),
-      sameSite: 'lax',
-      path: '/',
-    });
-
-    return { success: true, role: user.role };
+    throw new Error('โครงสร้างค่ายกกำลังเวกเตอร์ (Embedding) จาก API ไม่ถูกต้อง');
   } catch (error: any) {
-    console.error('Login error:', error);
-    if (error.message === 'MISSING_MONGODB_URI') {
-      return { error: 'ไม่พบการตั้งค่าฐานข้อมูล (MONGODB_URI) โปรดตรวจสอบไฟล์ .env' };
-    }
-    return { error: 'เกิดข้อผิดพลาดที่ไม่คาดคิด โปรดลองใหม่อีกครั้ง' };
+    console.error('Failed to generate embedding:', error);
+    throw new Error(`Embedding Generation Failed: ${error.message}`);
   }
-}
-
-export async function register(formData: FormData) {
-  const name = formData.get('name') as string;
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const phone = formData.get('phone') as string;
-
-  try {
-    const db = await getDb();
-    console.log(`[Register] Checking if user exists: ${email}`);
-    const existingUser = await db.collection('users').findOne({ email });
-
-    if (existingUser) {
-      console.log(`[Register] User already exists: ${email}`);
-      return { error: 'Email already registered' };
-    }
-
-    const userCount = await db.collection('users').countDocuments();
-    console.log(`[Register] Current user count: ${userCount}`);
-    const role = userCount === 0 ? 'admin' : 'user';
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const newUser: Omit<User, '_id'> = {
-      name,
-      email,
-      password: hashedPassword,
-      phone,
-      role,
-      createdAt: new Date(),
-    };
-
-    console.log(`[Register] Inserting new user: ${email} with role: ${role}`);
-    await db.collection('users').insertOne(newUser);
-    return { success: true };
-  } catch (error) {
-    console.error('[Register] CRITICAL ERROR:', error);
-    return { error: 'An unexpected error occurred' };
-  }
-}
-
-export async function logout() {
-  (await cookies()).delete('session');
-}
-
-export async function getCurrentUser(): Promise<User | null> {
-  const session = (await cookies()).get('session')?.value;
-  if (!session) return null;
-
-  try {
-    const { payload } = await jwtVerify(session, JWT_SECRET);
-    if (!payload.userId || typeof payload.userId !== 'string' || payload.userId.length !== 24) {
-      console.warn('[getCurrentUser] Invalid userId in token:', payload.userId);
-      return null;
-    }
-    const db = await getDb();
-    const user = await db.collection<User>('users').findOne({ 
-      _id: new ObjectId(payload.userId) 
-    });
-
-    if (!user) return null;
-    
-    // Remove password from memory
-    const { password, ...userWithoutPassword } = user;
-    return {
-      ...userWithoutPassword,
-      _id: user._id?.toString()
-    } as User;
-  } catch (error) {
-    return null;
-  }
-}
-
-// --- Admin Actions ---
-
-export async function getAdminStatus(): Promise<AdminStatus> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'admin') {
-    throw new Error('Unauthorized');
-  }
-
-  try {
-    const db = await getDb();
-    const projectCount = await db.collection('projects').countDocuments();
-    const userCount = await db.collection('users').countDocuments();
-    
-    return {
-      dbConnected: true,
-      projectCount,
-      userCount
-    };
-  } catch (error) {
-    console.error('Failed to get status:', error);
-    return {
-      dbConnected: false,
-      projectCount: 0,
-      userCount: 0
-    };
-  }
-}
-
-export async function getAllUsers(): Promise<User[]> {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'admin') {
-    throw new Error('Unauthorized');
-  }
-
-  const db = await getDb();
-  const users = await db.collection<User>('users').find({}).toArray();
-  return users.map(u => ({
-    ...u,
-    _id: u._id?.toString(),
-    password: undefined // Safety
-  })) as User[];
-}
-
-export async function updateUser(id: string, updates: Partial<User>) {
-  const currentUser = await getCurrentUser();
-  if (!currentUser || currentUser.role !== 'admin') {
-    throw new Error('Unauthorized');
-  }
-
-  const db = await getDb();
-  const { _id, password, ...safeUpdates } = updates;
-  
-  const updatePayload: any = { ...safeUpdates };
-  if (password) {
-    updatePayload.password = await bcrypt.hash(password, 10);
-  }
-  
-  await db.collection('users').updateOne(
-    { _id: new ObjectId(id) },
-    { $set: updatePayload }
-  );
-  
-  revalidatePath('/admin');
-  return { success: true };
 }
 
 // --- Project Actions ---
@@ -208,59 +33,257 @@ export async function updateUser(id: string, updates: Partial<User>) {
 export async function getProjects() {
   try {
     const db = await getDb();
-    const projects = await db.collection('projects').find({}).sort({ createdAt: -1 }).toArray();
-    console.log(`[getProjects] Found ${projects.length} projects`);
-    return projects.map(p => ({
-      ...p,
-      _id: p._id.toString(),
-      imageUrl: p.imageUrl
-    })) as Project[];
-  } catch (error: any) {
-    console.error('Failed to fetch projects:', error);
-    if (error.message === 'MISSING_MONGODB_URI') {
-      throw new Error('DATABASE_NOT_CONFIGURED');
-    }
+    const data = await db.collection('projects').find({}).sort({ createdAt: -1 }).toArray();
+    return data.map(item => ({
+      ...item,
+      _id: item._id.toString(),
+    })) as any;
+  } catch (error) {
+    console.error('Failed to get projects:', error);
     return [];
   }
 }
 
-export async function addProject(project: Omit<Project, '_id' | 'createdAt'>) {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'admin') throw new Error('Unauthorized');
-
-  const db = await getDb();
-  const newProject = {
-    ...project,
-    createdAt: new Date(),
-  };
-  const result = await db.collection('projects').insertOne(newProject);
-  revalidatePath('/');
-  revalidatePath('/admin');
-  return { success: true, id: result.insertedId.toString() };
+export async function addProject(formData: any) {
+  try {
+    const db = await getDb();
+    const newProject = {
+      ...formData,
+      createdAt: new Date()
+    };
+    await db.collection('projects').insertOne(newProject);
+    revalidatePath('/');
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Add Project Error:', error);
+    throw new Error(error.message);
+  }
 }
 
-export async function updateProject(id: string, project: Partial<Project>) {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'admin') throw new Error('Unauthorized');
-
-  const db = await getDb();
-  const { _id, ...updateData } = project;
-  await db.collection('projects').updateOne(
-    { _id: new ObjectId(id) },
-    { $set: updateData }
-  );
-  revalidatePath('/');
-  revalidatePath('/admin');
-  return { success: true };
+export async function updateProject(id: string, formData: any) {
+  try {
+    const db = await getDb();
+    await db.collection('projects').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: formData }
+    );
+    revalidatePath('/');
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Update Project Error:', error);
+    throw new Error(error.message);
+  }
 }
 
 export async function deleteProject(id: string) {
-  const user = await getCurrentUser();
-  if (!user || user.role !== 'admin') throw new Error('Unauthorized');
+  try {
+    const db = await getDb();
+    await db.collection('projects').deleteOne({ _id: new ObjectId(id) });
+    revalidatePath('/');
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error) {
+    console.error('Delete Project Error:', error);
+    throw new Error('ไม่สามารถลบข้อมูลได้');
+  }
+}
 
-  const db = await getDb();
-  await db.collection('projects').deleteOne({ _id: new ObjectId(id) });
-  revalidatePath('/');
-  revalidatePath('/admin');
-  return { success: true };
+// --- Knowledge Actions ---
+
+export async function getKnowledge() {
+  try {
+    const db = await getDb();
+    const data = await db.collection('knowledge').find({}).sort({ updatedAt: -1 }).toArray();
+    return data.map(item => ({
+      ...item,
+      _id: item._id.toString(),
+    })) as any;
+  } catch (error) {
+    console.error('Failed to get knowledge:', error);
+    return [];
+  }
+}
+
+export async function addKnowledge(formData: { title: string; content: string; category: string }) {
+  try {
+    const db = await getDb();
+    const embedding = await generateVector(formData.content);
+    const newKnowledge = {
+      ...formData,
+      embedding: embedding,
+      updatedAt: new Date()
+    };
+    await db.collection('knowledge').insertOne(newKnowledge);
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Add Knowledge Error:', error);
+    throw new Error(error.message);
+  }
+}
+
+export async function updateKnowledge(id: string, formData: { title: string; content: string; category: string }) {
+  try {
+    const db = await getDb();
+    const embedding = await generateVector(formData.content);
+    const updatedData = {
+      ...formData,
+      embedding: embedding,
+      updatedAt: new Date()
+    };
+    await db.collection('knowledge').updateOne(
+      { _id: new ObjectId(id) },
+      { $set: updatedData }
+    );
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error: any) {
+    console.error('Update Knowledge Error:', error);
+    throw new Error(error.message);
+  }
+}
+
+export async function deleteKnowledge(id: string) {
+  try {
+    const db = await getDb();
+    await db.collection('knowledge').deleteOne({ _id: new ObjectId(id) });
+    revalidatePath('/admin');
+    return { success: true };
+  } catch (error) {
+    console.error('Delete Knowledge Error:', error);
+    throw new Error('ไม่สามารถลบข้อมูลได้');
+  }
+}
+
+// --- Auth Actions ---
+
+export async function register(formData: FormData) {
+  try {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const name = formData.get('name') as string;
+    const phone = formData.get('phone') as string;
+
+    const db = await getDb();
+    const existingUser = await db.collection('users').findOne({ email });
+
+    if (existingUser) {
+      return { error: 'อีเมลนี้ถูกใช้งานแล้ว' };
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = {
+      email,
+      password: hashedPassword,
+      name,
+      phone,
+      role: 'user', // Default role
+      createdAt: new Date()
+    };
+
+    await db.collection('users').insertOne(newUser);
+    return { success: true };
+  } catch (error) {
+    console.error('Register Error:', error);
+    return { error: 'เกิดข้อผิดพลาดในการลงทะเบียน' };
+  }
+}
+
+export async function login(formData: FormData) {
+  try {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    const db = await getDb();
+    const user = await db.collection('users').findOne({ email });
+
+    if (!user) {
+      return { error: 'ไม่พบผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง' };
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return { error: 'ไม่พบผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง' };
+    }
+
+    const token = await new SignJWT({ 
+      id: user._id.toString(), 
+      email: user.email, 
+      role: user.role 
+    })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt()
+      .setExpirationTime('2h')
+      .sign(JWT_SECRET);
+
+    const cookieStore = await cookies();
+    cookieStore.set('auth_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 2, // 2 hours
+      path: '/',
+    });
+
+    return { success: true, role: user.role };
+  } catch (error) {
+    console.error('Login Error:', error);
+    return { error: 'เกิดข้อผิดพลาดในการเข้าสู่ระบบ' };
+  }
+}
+
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete('auth_token');
+}
+
+export async function getCurrentUser() {
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get('auth_token')?.value;
+
+    if (!token) return null;
+
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    const db = await getDb();
+    const user = await db.collection('users').findOne({ _id: new ObjectId(payload.id as string) });
+
+    if (!user) return null;
+
+    return {
+      id: user._id.toString(),
+      email: user.email,
+      name: user.name,
+      role: user.role,
+    };
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function getAdminStatus() {
+  try {
+    const db = await getDb();
+    const [projectCount, userCount, knowledgeCount] = await Promise.all([
+      db.collection('projects').countDocuments(),
+      db.collection('users').countDocuments(),
+      db.collection('knowledge').countDocuments()
+    ]);
+
+    return {
+      dbConnected: true,
+      projectCount,
+      userCount,
+      knowledgeCount
+    };
+  } catch (error) {
+    return {
+      dbConnected: false,
+      projectCount: 0,
+      userCount: 0,
+      knowledgeCount: 0
+    };
+  }
 }

@@ -19,7 +19,7 @@ const Navbar = () => {
             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-indigo-600 rounded-lg flex items-center justify-center group-hover:rotate-6 transition-transform">
               <Code2 className="text-white sm:w-5 sm:h-5" size={18} />
             </div>
-            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-indigo-400 whitespace-nowrap">MY<span className="text-white">PORTFOLIO</span></h1>
+            <h1 className="text-lg sm:text-xl font-bold tracking-tight text-indigo-400 whitespace-nowrap">Peeravich <span className="text-white">PORTFOLIO</span></h1>
           </Link>
           
           {/* Desktop Navigation */}

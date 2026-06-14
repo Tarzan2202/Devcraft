@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import ProjectCard from '@/components/ProjectCard';
 import ContactModal from '@/components/ContactModal';
+import TypingText from '@/components/TypingText';
 import { Monitor, Star, Layout, Zap, Globe, CheckCircle2, MessageCircle, Code2, Shield } from 'lucide-react';
 import { Project } from '@/lib/types';
 import Link from 'next/link';
@@ -31,16 +32,19 @@ export default function HomeClient({ initialProjects, dbError }: HomeClientProps
               </div>
               <div className="relative z-10 p-6 md:p-8">
                 <span className="text-indigo-500 font-bold text-[10px] md:text-xs mb-4 uppercase tracking-[0.3em] flex items-center gap-2">
-                  <Star size={14} className="fill-indigo-500" /> MY CREATIVE PORTFOLIO
+                  <Star size={14} className="fill-indigo-500" /> 
                 </span>
                 <h2 className="text-3xl sm:text-4xl md:text-6xl font-black mb-6 leading-[1] md:leading-[0.9] tracking-tighter">
-                  HELLO, I'M Peeravich <br/>
+                  <TypingText text="HELLO, I'M Peeravich" speed={125} /> <br/>
                   <span className="text-zinc-500 text-xl sm:text-2xl md:text-3xl font-medium tracking-tight">FULL-STACK DEVELOPER</span>
+                  
                 </h2>
                 <p className="text-zinc-400 max-w-xl text-xs sm:text-sm md:text-lg leading-relaxed mb-4">
-                  ยินดีต้อนรับสู่พื้นที่รวบรวมผลงานและโปรเจกต์ต่างๆ ที่ผมได้พัฒนาขึ้นมา 
-                  โดยเน้นการสร้างประสบการณ์ผู้ใช้งานที่ดี การออกแบบที่สวยงาม 
-                  และเลือกใช้เทคโนโลยีที่ทันสมัยเพื่อตอบโจทย์การใช้งานที่มีประสิทธิภาพ
+                  <TypingText 
+                    text="ยินดีต้อนรับสู่พื้นที่รวบรวมผลงานและโปรเจกต์ต่างๆ ที่ผมได้พัฒนาขึ้นมา โดยเน้นการสร้างประสบการณ์ผู้ใช้งานที่ดี การออกแบบที่สวยงาม และเลือกใช้เทคโนโลยีที่ทันสมัยเพื่อตอบโจทย์การใช้งานที่มีประสิทธิภาพ" 
+                    speed={25} 
+                    delay={1000}
+                  />
                 </p>
               </div>
             </div>
@@ -58,53 +62,52 @@ export default function HomeClient({ initialProjects, dbError }: HomeClientProps
                 <div className="text-indigo-100 text-xs font-bold uppercase tracking-[0.2em]">โปรเจกต์ที่ทำเสร็จสิ้น</div>
               </div>
             </div>
-            <div className="md:col-span-4 md:row-span-1 bg-indigo-600 rounded-[2.5rem] p-8 flex flex-col justify-between group shadow-2xl shadow-indigo-500/20 min-h-[200px] md:min-h-0">
+            <div className="md:col-span-4 md:row-span-1 bg-indigo-600 rounded-[2.5rem] p-6 flex flex-col justify-between group shadow-2xl shadow-indigo-500/20 min-h-[200px] md:min-h-0">
               <div className="flex justify-between items-start">
                 <div className="flex items-center gap-2 text-white font-medium">
-                  <Code2 size={24} /> 
-                  <span>ทักษะ</span>
+                  <Code2 size={20} /> 
+                  <span className="text-sm">ทักษะ</span>
                 </div>
               </div>
 
               {/* โซน Tech Stack พร้อมโลโก้ */}
-              <div className="flex flex-wrap gap-2 mt-4">
-                
-                {/* React */}
-                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" className="w-4 h-4" alt="React" />
-                  React
-                </span>
-
-                {/* Next.js */}
-                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" className="w-4 h-4 invert" alt="Next.js" />
-                  Next.js
-                </span>
-
-                {/* Tailwind CSS */}
-                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" className="w-4 h-4" alt="Tailwind" />
-                  Tailwind
-                </span>
-
-                {/* TypeScript */}
-                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" className="w-4 h-4" alt="TypeScript" />
-                  TypeScript
-                </span>
-
-                {/* Node.js */}
-                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" className="w-4 h-4" alt="Node.js" />
-                  Node.js
-                </span>
-
-                {/* mongoDB */}
-                <span className="flex items-center gap-1.5 bg-white/10 text-white text-xs font-medium px-3 py-1.5 rounded-xl border border-white/10">
-                  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" className="w-4 h-4" alt="MongoDB" />
-                  MongoDB
-                </span>
-
+              <div className="flex flex-wrap gap-2 mt-3">
+                {[
+                  { name: "React", icon: "react/react-original.svg", color: "#61DAFB" },
+                  { name: "Next.js", icon: "nextjs/nextjs-original.svg", color: "#FFFFFF", invert: true },
+                  { name: "Tailwind", icon: "tailwindcss/tailwindcss-original.svg", color: "#06B6D4" },
+                  { name: "TypeScript", icon: "typescript/typescript-original.svg", color: "#3178C6" },
+                  { name: "Node.js", icon: "nodejs/nodejs-original.svg", color: "#339933" },
+                  { name: "MongoDB", icon: "mongodb/mongodb-original.svg", color: "#47A248" },
+                  { name: "Python", icon: "python/python-original.svg", color: "#3776AB" },
+                  { name: "Php", icon: "php/php-original.svg", color: "#777BB4" },
+                ].map((tech, index) => (
+                  <span 
+                    key={tech.name}
+                    className="opacity-0 animate-fade-in-up flex items-center gap-2 bg-zinc-900/40 hover:-translate-y-0.5 text-white text-[10px] sm:text-xs font-bold px-3 py-1.5 rounded-xl border transition-all duration-300"
+                    style={{ 
+                      animationDelay: `${(index + 1) * 200}ms`,
+                      borderColor: `${tech.color}30`,
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.borderColor = tech.color;
+                      e.currentTarget.style.backgroundColor = `${tech.color}15`;
+                      e.currentTarget.style.boxShadow = `0 0 20px ${tech.color}25`;
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.borderColor = `${tech.color}30`;
+                      e.currentTarget.style.backgroundColor = 'rgba(24, 24, 27, 0.4)';
+                      e.currentTarget.style.boxShadow = 'none';
+                    }}
+                  >
+                    <img 
+                      src={`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${tech.icon}`} 
+                      className={`w-4 h-4 ${tech.invert ? 'invert' : ''}`} 
+                      alt={tech.name} 
+                    />
+                    {tech.name}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
@@ -154,7 +157,7 @@ export default function HomeClient({ initialProjects, dbError }: HomeClientProps
                 <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                   <Code2 className="text-white" size={16} />
                 </div>
-                <h1 className="text-lg font-bold tracking-tight text-indigo-400 uppercase">MY PORTFOLIO</h1>
+                <h1 className="text-lg font-bold tracking-tight text-indigo-400 uppercase">Peeravich PORTFOLIO</h1>
               </Link>
               <p className="text-zinc-600 text-xs max-w-xs text-center md:text-left leading-relaxed">
                 มุ่งมั่นพัฒนาซอฟต์แวร์และเว็บไซต์ที่มีคุณภาพ เพื่อส่งมอบประสบการณ์ที่ดีที่สุดให้กับผู้ใช้งาน
@@ -172,7 +175,7 @@ export default function HomeClient({ initialProjects, dbError }: HomeClientProps
                 </button>
               </div>
               <div className="flex items-center gap-4">
-                <span>&copy; 2024 MY PORTFOLIO</span>
+                <span>&copy;  PORTFOLIO</span>
                 <div className="h-4 w-px bg-zinc-800"></div>
                 <span className="text-green-500 flex items-center gap-2">
                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>

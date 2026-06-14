@@ -23,8 +23,11 @@ export interface User {
   createdAt: Date;
 }
 
-export interface AdminStatus {
-  dbConnected: boolean;
-  projectCount: number;
-  userCount: number;
+export interface Knowledge {
+  _id?: string | ObjectId;
+  title: string;
+  content: string;
+  category: 'profile' | 'experience' | 'skill' | 'faq' | 'other';
+  embedding?: number[];
+  updatedAt: Date;
 }
