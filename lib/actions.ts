@@ -287,3 +287,6 @@ export async function getAdminStatus() {
     };
   }
 }
+export async function getAllUsers() {
+  
+}
