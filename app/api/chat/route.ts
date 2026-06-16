@@ -50,7 +50,6 @@ export async function POST(req: NextRequest) {
       searchError = `Embedding Error: ${err.message}`;
     }
     // 2. ค้นหาคลังความรู้จาก MongoDB Atlas
-    // 2. ค้นหาคลังความรู้จาก MongoDB Atlas
     let searchResults: Array<{ title: string; content: string; score?: number }> = [];
     try {
       if (queryVector.length > 0) {
