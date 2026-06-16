@@ -50,13 +50,15 @@ export async function POST(req: NextRequest) {
       searchError = `Embedding Error: ${err.message}`;
     }
     // 2. ค้นหาคลังความรู้จาก MongoDB Atlas
-    let searchResults = [];
+    // 2. ค้นหาคลังความรู้จาก MongoDB Atlas
+    let searchResults: Array<{ title: string; content: string; score?: number }> = [];
     try {
       if (queryVector.length > 0) {
         const db = await getDb();
         const collection = db.collection('knowledge');
 
-        searchResults = await collection.aggregate([
+        // ใช้การระบุประเภทผลลัพธ์ที่ปลายทางร่วมด้วย (Optional แต่แนะนำ)
+        searchResults = await collection.aggregate<{ title: string; content: string; score: number }>([
           {
             $vectorSearch: {
               index: "vector_index", 
@@ -103,9 +105,11 @@ export async function POST(req: NextRequest) {
         systemInstruction: `คุณคือผู้ช่วย AI ส่วนตัวของ พีราวิชญ์ (เจ้าของ Portfolio นี้) 
         ใช้ข้อมูลต่อไปนี้เพื่อตอบคำถามผู้เยี่ยมชมอย่างสุภาพ เป็นกันเอง และเป็นมืออาชีพ 
 
-        กติกาการตอบ:
-        1. ถ้ามีข้อมูลในบริบท (Context) ให้ใช้ข้อมูลนั้นตอบเป็นหลัก
-        2. หากในบริบท (Context) ไม่มีข้อมูล หรือระบุว่า "ไม่พบข้อมูลที่เกี่ยวข้อง..." ให้ตอบตามความรู้ของคุณและแจ้งให้ผู้ใช้ทราบว่าไม่มีข้อมูลนี้ในพอร์ตโฟลิโอโดยตรง
+        กติกาการตอบ (สำคัญมาก):
+        1. ให้ตอบเฉพาะคำถามที่เกี่ยวกับ พีราวิชญ์, ผลงาน, ประวัติ, ทักษะ หรือข้อมูลที่ระบุไว้ในบริบท (Context) เท่านั้น
+        2. หากผู้ใช้ถามคำถามทั่วไป นอกเหนือเรื่องราวของพีราวิชญ์ หรือเรื่องที่ไม่เกี่ยวข้องกับพอร์ตโฟลิโอนี้ (เช่น ข่าวสาร, การเมือง, สูตรอาหาร, โค้ดโปรแกรมทั่วไปที่ไม่เกี่ยวข้องกัน) ให้ปฏิเสธการตอบอย่างสุภาพ เช่น "ขออภัยด้วยครับ ผมเป็นผู้ช่วย AI ของคุณพีราวิชญ์ จึงสามารถให้ข้อมูลได้เฉพาะส่วนที่เกี่ยวข้องกับคุณพีราวิชญ์และผลงานเท่านั้นครับ"
+        3. ถ้ามีข้อมูลในบริบท (Context) ให้ใช้ข้อมูลนั้นตอบเป็นหลัก
+        4. หากเป็นเรื่องเกี่ยวกับพีราวิชญ์แต่ในบริบท (Context) ไม่มีข้อมูล ให้แจ้งผู้ใช้ทราบว่าไม่มีข้อมูลนี้ในพอร์ตโฟลิโอโดยตรง
 
         บริบทจากฐานข้อมูล (Context):
         ${context}
