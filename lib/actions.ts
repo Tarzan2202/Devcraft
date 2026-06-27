@@ -7,6 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { SignJWT, jwtVerify } from 'jose';
 import bcrypt from 'bcryptjs';
+import { User } from '@/lib/types';
 
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GENERATIVE_AI_API_KEY || '');
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'default-secret-key-change-me');
@@ -239,7 +240,7 @@ export async function logout() {
   cookieStore.delete('auth_token');
 }
 
-export async function getCurrentUser() {
+export async function getCurrentUser(): Promise<User | null> {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get('auth_token')?.value;
@@ -253,10 +254,12 @@ export async function getCurrentUser() {
     if (!user) return null;
 
     return {
-      id: user._id.toString(),
+      _id: user._id.toString(),
       email: user.email,
       name: user.name,
-      role: user.role,
+      role: user.role as 'admin' | 'user',
+      phone: user.phone,
+      createdAt: user.createdAt || new Date(),
     };
   } catch (error) {
     return null;
@@ -286,4 +289,7 @@ export async function getAdminStatus() {
       knowledgeCount: 0
     };
   }
+}
+export async function getAllUsers() {
+  
 }

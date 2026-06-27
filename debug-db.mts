@@ -24,7 +24,7 @@ async function test() {
         const indexes = await collection.listSearchIndexes().toArray();
         console.log('Search Indexes:', JSON.stringify(indexes, null, 2));
     } catch (e) {
-        console.log('Could not list search indexes (maybe not Atlas or permission issue):', e.message);
+        // console.log('Could not list search indexes (maybe not Atlas or permission issue):', e.message);
     }
 
   } catch (err) {

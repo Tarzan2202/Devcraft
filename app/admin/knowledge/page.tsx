@@ -135,7 +135,6 @@ const KnowledgeAdmin = () => {
                   <label className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">เนื้อหา (Content)</label>
                   <textarea 
                     required
-                    required
                     rows={6}
                     value={formData.content}
                     onChange={(e) => setFormData({...formData, content: e.target.value})}
